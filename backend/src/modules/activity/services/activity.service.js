@@ -1,7 +1,6 @@
 const fs = require('node:fs');
-const path = require('node:path');
 
-const fp = path.join(process.cwd(), 'data', 'activity.json');
+const { ACTIVITY_FILE: fp } = require('../../../config');
 
 function loadDataA() {
   if (!fs.existsSync(fp)) {
