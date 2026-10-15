@@ -7,7 +7,9 @@ const HttpError = require('./utils/httpError');
 
 const app = express();
 
-app.use(express.json());
+app.disable('x-powered-by');
+// Tasks and activity entries are a few hundred bytes; 10kb leaves plenty of room.
+app.use(express.json({ limit: '10kb' }));
 
 app.use('/tasks', tasksRouter);
 app.use('/activity', activityRouter);
