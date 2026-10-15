@@ -1,22 +1,15 @@
 const HttpError = require('../../../utils/httpError');
 
-const ALLOWED_FIELDS = ['title', 'completed'];
+const MAX_TITLE_LENGTH = 200;
+
+// Only "title" and "completed" are copied into the normalised result. Other
+// fields are ignored rather than rejected: create always ignored them, and
+// existing clients may still send them. Ignoring them on update is what stops
+// a PATCH from overwriting id, createdAt or adding arbitrary keys.
 
 function validatePayloadShape(payload) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     throw new HttpError(400, 'Body must be a JSON object.');
-  }
-}
-
-function ensureNoUnknownFields(payload) {
-  const unknownFields = Object.keys(payload).filter(
-    (field) => !ALLOWED_FIELDS.includes(field)
-  );
-
-  if (unknownFields.length > 0) {
-    throw new HttpError(400, 'Body contains unsupported fields.', {
-      unsupportedFields: unknownFields,
-    });
   }
 }
 
@@ -32,6 +25,10 @@ function normalizeTitleIfPresent(payload, normalized) {
   const trimmedTitle = payload.title.trim();
   if (!trimmedTitle) {
     throw new HttpError(400, '"title" cannot be empty.');
+  }
+
+  if (trimmedTitle.length > MAX_TITLE_LENGTH) {
+    throw new HttpError(400, `"title" must be at most ${MAX_TITLE_LENGTH} characters.`);
   }
 
   normalized.title = trimmedTitle;
@@ -51,7 +48,6 @@ function normalizeCompletedIfPresent(payload, normalized) {
 
 function validateCreateTask(payload) {
   validatePayloadShape(payload);
-  ensureNoUnknownFields(payload);
 
   const normalized = {};
   normalizeTitleIfPresent(payload, normalized);
@@ -70,7 +66,6 @@ function validateCreateTask(payload) {
 
 function validateUpdateTask(payload) {
   validatePayloadShape(payload);
-  ensureNoUnknownFields(payload);
 
   const normalized = {};
   normalizeTitleIfPresent(payload, normalized);
@@ -84,6 +79,7 @@ function validateUpdateTask(payload) {
 }
 
 module.exports = {
+  MAX_TITLE_LENGTH,
   validateCreateTask,
   validateUpdateTask,
 };
