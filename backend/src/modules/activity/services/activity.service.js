@@ -1,53 +1,20 @@
-const fs = require('node:fs');
+const { createId } = require('../../../utils/id');
+const activityRepository = require('../repositories/activity.repository');
 
-const { ACTIVITY_FILE: fp } = require('../../../config');
-
-function loadDataA() {
-  if (!fs.existsSync(fp)) {
-    fs.writeFileSync(fp, '[]');
-  }
-
-  let raw = fs.readFileSync(fp, 'utf8');
-  if (!raw) {
-    raw = '[]';
-  }
-
-  return JSON.parse(raw);
+async function getAllActivity() {
+  return activityRepository.findAll();
 }
 
-function loadDataB() {
-  if (!fs.existsSync(fp)) {
-    fs.writeFileSync(fp, '[]');
-  }
-
-  let raw = fs.readFileSync(fp, 'utf8');
-  if (!raw) {
-    raw = '[]';
-  }
-
-  return JSON.parse(raw);
-}
-
-function getAllActivity() {
-  const arr = loadDataA();
-  return arr;
-}
-
-function createNewActivity(b) {
-  const list = loadDataB();
-  const one = {
-    id: String(Date.now()),
-    action: b.action,
-    info: b.info,
+async function createActivity({ action, info }) {
+  return activityRepository.insert({
+    id: createId(),
+    action,
+    info,
     when: new Date().toISOString(),
-  };
-
-  list.push(one);
-  fs.writeFileSync(fp, JSON.stringify(list, null, 2));
-  return one;
+  });
 }
 
 module.exports = {
   getAllActivity,
-  createNewActivity,
+  createActivity,
 };
