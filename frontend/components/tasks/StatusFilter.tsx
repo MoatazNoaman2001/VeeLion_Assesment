@@ -8,29 +8,25 @@ const FILTERS: Array<{ label: string; value: TaskFilter }> = [
 
 type StatusFilterProps = {
   value: TaskFilter;
+  counts: Record<TaskFilter, number>;
   onChange: (value: TaskFilter) => void;
 };
 
-export function StatusFilter({ value, onChange }: StatusFilterProps) {
+export function StatusFilter({ value, counts, onChange }: StatusFilterProps) {
   return (
-    <section aria-label="Filter tasks by status" className="card" style={{ padding: "0.8rem" }}>
-      <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-        {FILTERS.map((filter) => {
-          const active = filter.value === value;
-
-          return (
-            <button
-              key={filter.value}
-              type="button"
-              className={active ? "button primary" : "button"}
-              onClick={() => onChange(filter.value)}
-              aria-pressed={active}
-            >
-              {filter.label}
-            </button>
-          );
-        })}
-      </div>
-    </section>
+    <div className="segmented" role="group" aria-label="Filter tasks by status">
+      {FILTERS.map((filter) => (
+        <button
+          key={filter.value}
+          type="button"
+          className="segmented__option"
+          onClick={() => onChange(filter.value)}
+          aria-pressed={filter.value === value}
+        >
+          {filter.label}
+          <span className="segmented__count">{counts[filter.value]}</span>
+        </button>
+      ))}
+    </div>
   );
 }
