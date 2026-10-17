@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
-import { getActivityFromBackend } from "@/lib/backendApi";
+import { getActivityFromBackend } from "@/lib/server/backendApi";
+import { toErrorResponse } from "@/lib/server/routeHandlers";
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
     const logs = await getActivityFromBackend();
     return NextResponse.json(logs, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { error: { message: error instanceof Error ? error.message : "Unable to fetch activity logs." } },
-      { status: 500 }
-    );
+    return toErrorResponse(error, "Unable to fetch activity logs.");
   }
 }

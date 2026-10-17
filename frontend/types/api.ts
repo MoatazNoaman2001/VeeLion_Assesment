@@ -28,3 +28,11 @@ export type ErrorResponse = {
 };
 
 export type TaskFilter = "all" | "completed" | "pending";
+
+export type TaskStatus = "todo" | "in-progress" | "done";
+
+export type TasksSummary = {
+  total: number;
+  byStatus: Record<TaskStatus, number>;
+  recentActivityCount: number;
+};
