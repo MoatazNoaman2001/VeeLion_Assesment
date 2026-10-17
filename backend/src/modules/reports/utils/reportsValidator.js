@@ -3,7 +3,6 @@ const HttpError = require('../../../utils/httpError');
 const DEFAULT_WINDOW_DAYS = 7;
 const MAX_WINDOW_DAYS = 365;
 
-/** `?days=` controls what "recent" means for recentActivityCount. */
 function parseWindowDays(query) {
   if (query.days === undefined) {
     return DEFAULT_WINDOW_DAYS;

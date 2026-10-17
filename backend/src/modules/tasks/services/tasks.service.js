@@ -2,8 +2,6 @@ const { createId } = require('../../../utils/id');
 const HttpError = require('../../../utils/httpError');
 const tasksRepository = require('../repositories/tasks.repository');
 
-// Inputs are expected to be normalised by utils/taskValidator.js already.
-
 async function getAllTasks() {
   return tasksRepository.findAll();
 }

@@ -1,9 +1,6 @@
 const { TASKS_FILE } = require('../../../config');
 const { readJsonArray, updateJsonArray } = require('../../../utils/jsonStore');
 
-// The only place that knows tasks live in a JSON file. Services and other
-// modules (e.g. reports) go through these functions.
-
 async function findAll() {
   return readJsonArray(TASKS_FILE);
 }
@@ -20,7 +17,6 @@ async function insert(task) {
   });
 }
 
-/** Applies `changes` to the task. Resolves to the updated task, or null if it does not exist. */
 async function update(taskId, changes) {
   return updateJsonArray(TASKS_FILE, (tasks) => {
     const index = tasks.findIndex((task) => task.id === taskId);
@@ -33,7 +29,6 @@ async function update(taskId, changes) {
   });
 }
 
-/** Resolves to the removed task, or null if it does not exist. */
 async function remove(taskId) {
   return updateJsonArray(TASKS_FILE, (tasks) => {
     const index = tasks.findIndex((task) => task.id === taskId);

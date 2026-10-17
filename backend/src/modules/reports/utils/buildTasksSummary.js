@@ -12,7 +12,6 @@ function countByStatus(tasks) {
   return counts;
 }
 
-/** Entries whose `when` falls inside the last `windowDays` days. Unparseable dates are skipped. */
 function countRecentActivity(entries, { now, windowDays }) {
   const end = now.getTime();
   const start = end - windowDays * DAY_MS;
@@ -23,7 +22,6 @@ function countRecentActivity(entries, { now, windowDays }) {
   }).length;
 }
 
-// Pure function: no I/O, and the clock is passed in, so it is trivial to test.
 function buildTasksSummary({ tasks, activity, now, windowDays }) {
   return {
     total: tasks.length,

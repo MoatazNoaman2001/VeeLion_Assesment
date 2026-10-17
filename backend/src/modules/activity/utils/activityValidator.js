@@ -3,8 +3,6 @@ const HttpError = require('../../../utils/httpError');
 const MAX_FIELD_LENGTH = 500;
 const TEXT_FIELDS = ['action', 'info'];
 
-// Both fields stay optional, as before; an empty body still creates an entry.
-// What is rejected now is non-string values and oversized text.
 function validateCreateActivity(payload) {
   const body = payload === undefined ? {} : payload;
 
