@@ -2,11 +2,6 @@ const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
 
-/**
- * Starts the app on a random port against a temporary data directory.
- * node --test runs each file in its own process, so setting DATA_DIR before
- * the app (and its config) is first required is enough to isolate them.
- */
 async function startTestServer({ tasks = [], activity = [] } = {}) {
   const dataDir = await fs.mkdtemp(path.join(os.tmpdir(), 'veelion-api-'));
   await fs.writeFile(path.join(dataDir, 'tasks.json'), JSON.stringify(tasks));
@@ -38,7 +33,7 @@ async function startTestServer({ tasks = [], activity = [] } = {}) {
     await fs.rm(dataDir, { recursive: true, force: true });
   }
 
-  return { request, readData, close };
+  return { baseUrl, request, readData, close };
 }
 
 module.exports = {

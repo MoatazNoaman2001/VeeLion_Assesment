@@ -79,7 +79,7 @@ describe('GET /reports/tasks-summary', () => {
   });
 
   test('reflects writes made through the other modules', async () => {
-    await api.request('POST', '/tasks', { title: 'c' });
+    await api.request('POST', '/tasks', { title: 'Third task' });
     await api.request('POST', '/activity', { action: 'x' });
 
     const { body } = await api.request('GET', '/reports/tasks-summary');

@@ -65,10 +65,20 @@ test('PATCH /tasks/:id cannot overwrite id, createdAt or add fields', async () =
   assert.equal('isAdmin' in stored, false);
 });
 
-test('PATCH /tasks/:id applies the same title rule as create', async () => {
-  const { status, body } = await api.request('PATCH', '/tasks/task-1', { title: 'b' });
+test('create and update share the same title length rule', async () => {
+  assert.equal((await api.request('POST', '/tasks', { title: 'a' })).status, 400);
+  assert.equal((await api.request('PATCH', '/tasks/task-1', { title: ' b ' })).status, 400);
+  assert.equal((await api.request('POST', '/tasks', { title: 'x'.repeat(201) })).status, 400);
+
+  const { status, body } = await api.request('PATCH', '/tasks/task-1', { title: 'ok' });
   assert.equal(status, 200);
-  assert.equal(body.data.title, 'b');
+  assert.equal(body.data.title, 'ok');
+});
+
+test('responses carry security headers and no X-Powered-By', async () => {
+  const response = await fetch(api.baseUrl + '/tasks');
+  assert.equal(response.headers.get('x-powered-by'), null);
+  assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
 });
 
 test('PATCH /tasks/:id needs at least one known field', async () => {

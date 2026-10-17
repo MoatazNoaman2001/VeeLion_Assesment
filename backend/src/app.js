@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 
 const tasksRouter = require('./modules/tasks/routes/tasks.routes');
 const activityRouter = require('./modules/activity/routes/activity.routes');
@@ -9,7 +10,7 @@ const HttpError = require('./utils/httpError');
 const app = express();
 
 app.disable('x-powered-by');
-// Tasks and activity entries are a few hundred bytes; 10kb leaves plenty of room.
+app.use(helmet());
 app.use(express.json({ limit: '10kb' }));
 
 app.use('/tasks', tasksRouter);
